@@ -1,0 +1,172 @@
+QUIZBAY - Quiz Application
+
+MicroServices
+	•	LeaderBoard + Player
+	•	Quiz 
+	•	QuizMaster
+
+Screens
+Android and iOS (Player)
+	•	 Login player  	
+	•	 Type of game - static or dynamic  	
+	•	 Playground
+3.1 Static playground
+3.2  Dynamic playground
+5. LeaderBoard	
+5.1 Static leaderboard
+5.2 Dynamic leaderBoard
+6 Account of user
+6.1 Edit profile
+
+
+Web (Quizmaster)
+	•	Register & Login
+	•	Scrapper
+	•	Screener
+	•	Master (Contest Creator) -> LeaderBoard, Reports
+
+
+DataBase Structure
+	•	LeaderBoard + Player (MONGO)  	
+	•	Storing Questions (Mongo)  	
+	•	QuizMaster Authentication (MONGO)  	
+	•	Quiz (MONGO)  	
+Schema Design
+1. LeaderBoard - MONGO
+1.1 id - PK
+1.2 gameId - FK
+1.3 playerId - FK
+1.4 timeTaken
+1.5 date
+1.6 score
+
+2. Player - MONGO
+2.1 playerId - PK
+2.2 email
+2.3 userLevelRating
+2.4 totalScore
+
+3. Quiz (game) - MONGO
+3.1 contestId - PK
+3.2 startTime
+3.3 contestName
+3.4 numberOfQuestions
+3.5 maximumScore
+3.6 skipAllowed
+3.7 dateAdded
+3.8 time (for each question)
+3.9 category
+3.10 type (static / dynamic)
+3.11 quizMasterId
+3.12 endTime
+3.13 duration
+3.14 list<code>
+
+4. Question - MONGODB (Both Permanent & Temporary)
+		4.0 id
+		4.1 code
+4.2 question
+4.3 List<Answer>
+4.5 difficulty
+4.6 category
+4.7 score
+4.8 questionType (image/text/audio/video)
+
+5. Answer - MONGO
+	5.1 id
+	5.2 value
+	5.3 positions
+	5.4 isCorrect
+
+6. Subscription - MONGO
+	6.1 id - PK
+	6.2 playerId - FK
+	6.3 contestId - FK
+
+7. QuizMaster (JWT)
+Email
+Password
+Token
+Session
+Id
+
+API’S
+	•	/admin/scrapper - Scrapper to post API
+	•	/admin/screener/get  - Screener to get the questions from database
+	•	/admin/screener/post - Screener to send the data to new database after screening
+	•	/admin/quizmaster/static/createcontest - give details of quiz, contest timing and questions to be added in the contest
+	•	/admin/quizmaster/dynamic/createcontest - give details of quiz, contest timing and questions to be added in the contes
+	•	/admin/quizmaster/dynamic/liveconteststop - quizmaster to stop contest
+	•	/admin/quizmaster/showleaderboard
+	•	/admin/quizmaster/report
+**************************************************
+	•	/findByContest
+	•	/findByType
+	•	/getContest
+	•	/startQuiz
+	•	/showLeaderBoard (by type - static/dynamic)
+	•	/getPlayer
+	•	/updateTotalScore
+	•	/findByQuestionCode
+	•	/findBySubscriptionId
+	•	List<userId> findByContestId
+
+Notification-> data will be shared through kafka for common infra
+
+
+API’s
+	•	http://10.20.4.154:8180/player/{id}
+	•	http://10.20.4.154:8180/player/{id}/{score}
+	•	http://10.20.4.154:8180/player/email/{emailId}
+	•	http://10.20.4.154:8180/player (Request Body -> Player Object)
+
+	•	http://10.20.4.154:8180/contest/{id}
+	•	http://10.20.4.154:8180/contest/list
+	•	http://10.20.4.154:8180/contest/start/{contestId}/{playerId}
+	•	http://10.20.4.154:8180/contest/delete/{id}
+	•	http://10.20.4.154:8180/contest/contest/{type}
+	•	http://10.20.4.154:8180/contest (Request Body -> Contest Object)
+
+	•	http://10.20.4.154:8180/leaderboard (Request Body -> LeaderBoard Object)
+	•	http://10.20.4.154:8180/leaderboard/{type}
+	•	http://10.20.4.154:8180/leaderboard/gamesplayed/{id}
+	•	http://10.20.4.154:8180/leaderboard/right/{id}
+	•	http://10.20.4.154:8180/leaderboard/list/{contestId}
+	•	http://10.20.4.154:8180/leaderboard/id/{id}
+	•	http://10.20.4.154:8180/leaderboard/all
+
+	•	http://10.20.4.154:8180/subscription (Request Body -> Subscription)
+	•	http://10.20.4.154:8180/subscription/all/{id}
+	•	http://10.20.4.154:8180/subscription/{playerId}/{contestId}
+	•	http://10.20.4.154:8180/subscription/count/{contestId}
+	•	http://10.20.4.154:8180/subscription/delete/{playerId}/{contestId}
+	•	http://10.20.4.154:8180/subscription/contest/{id}
+	•	http://10.20.4.154:8180/subscription/type/{type}/{playerId}
+
+	•	http://10.20.4.154:8181/answer (Request Body -> answer object)
+	•	http://10.20.4.154:8181/answer/id/{id}
+	•	http://10.20.4.154:8181/answer/update
+
+	•	http://10.20.4.154:8181/answerscreen (Request Body -> AnswerScreen object)
+	•	http://10.20.4.154:8181/answerscreen/id/{id}
+	•	http://10.20.4.154:8181/answerscreen/update (Request Body -> AnswerScreen object)
+
+	•	http://10.20.4.154:8181/evaluate (Request Body -> PlayerEvaluation Object)
+
+	•	http://10.20.4.154:8181/question/{id}
+	•	http://10.20.4.154:8181/question/update (Request Body -> Question object)
+	•	http://10.20.4.154:8181/question (Request Body -> Question Object)
+	•	http://10.20.4.154:8181/question/list
+	•	http://10.20.4.154:8181/question/id/{id}
+	•	http://10.20.4.154:8181/question/storelist
+	•	http://10.20.4.154:8181/question/post/{id}
+
+	•	http://10.20.4.154:8181/questionscreen/{id}
+	•	http://10.20.4.154:8181/questionscreen/update (Request Body -> Questionscreen object)
+	•	http://10.20.4.154:8181/questionscreen (Request Body -> Questionscreen Object)
+	•	http://10.20.4.154:8181/questionscreen/list
+	•	http://10.20.4.154:8181/questionscreen/id/{id}
+	•	http://10.20.4.154:8181/questionscreen/url (Request Body -> Questionscreen Object)
+	•	http://10.20.4.154:8181/questionscreen/search/{question}
+	•	http://10.20.4.154:8181/questionscreen/scrapper (Request Param -> String api)
+
